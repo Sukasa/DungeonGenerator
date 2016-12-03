@@ -1,19 +1,13 @@
-﻿using RngLib;
-
-namespace Dungeon_Generator
+﻿namespace DungeonGenerator.Generators
 {
-    public abstract class DungeonGenerator<T>
+    public abstract class DungeonGenerator<T> : DungeonWorker<T>
     {
-        public IRng RandomSource { get; set; } = new SimpleRNG();
-        public DungeonFloor<T> Dungeon { get; private set; }
-
         public T DefaultOpenTile { get; set; } = default(T);
         public T DefaultBlockedTile { get; set; } = default(T);
         public T DefaultFeatureTile { get; set; } = default(T);
 
-        public DungeonGenerator(DungeonFloor<T> Dungeon)
+        public DungeonGenerator(DungeonFloor<T> InDungeon) : base(InDungeon)
         {
-            this.Dungeon = Dungeon;
             RandomSource.UseDefaultSeed();
         }
 
