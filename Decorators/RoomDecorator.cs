@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using RngLib;
+﻿using RngLib;
 using Sukasa.ExtensionFunctions;
+using System;
+using System.Drawing;
 
-namespace Dungeon_Generator.Decorators
+namespace DungeonGenerator.Decorators
 {
-    class RoomPlacer<T> : IDecorator<T>
+    class RoomPlacer<T> : IFeaturePlacer<T>
     {
         public T FillValue { get; set; }
         public T ReplaceValue { get; set; }

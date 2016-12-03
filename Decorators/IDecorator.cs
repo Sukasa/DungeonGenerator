@@ -1,9 +1,9 @@
 ﻿using RngLib;
 using System.Drawing;
 
-namespace Dungeon_Generator.Decorators
+namespace DungeonGenerator.Decorators
 {
-    public interface IDecorator<T>
+    public interface IFeaturePlacer<T>
     {
         T FillValue { get; set; }
         T ReplaceValue { get; set; }
