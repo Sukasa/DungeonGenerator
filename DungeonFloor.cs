@@ -1,7 +1,8 @@
 ﻿using RngLib;
+using Sukasa.ExtensionFunctions;
 using System.Drawing;
 
-namespace Dungeon_Generator
+namespace DungeonGenerator
 {
     /// <summary>
     ///     Dungeon floor class.  Contains the floor array, and eventually post-processing / SerDes / various utility functionality
@@ -15,7 +16,17 @@ namespace Dungeon_Generator
 
         public DungeonFloor(int Dimensions) : this(Dimensions, Dimensions)
         {
-            // Nada
+        }
+
+        public DungeonFloor(Size Dimensions) : this(Dimensions.Width, Dimensions.Height)
+        {
+        }
+
+        public DungeonFloor(int Width, int Height)
+        {
+            Tiles = new T[Width * Height];
+            Stride = Width;
+            Size = new Size(Width, Height);
         }
 
         public void SetTile(int X, int Y, T Value)
@@ -45,17 +56,9 @@ namespace Dungeon_Generator
             return Tiles[X + (Y * Stride)];
         }
 
-
         public void SetTile(Point Position, T Value)
         {
             SetTile(Position.X, Position.Y, Value);
-        }
-
-        public DungeonFloor(int Width, int Height)
-        {
-            Tiles = new T[Width * Height];
-            Stride = Width;
-            Size = new Size(Width, Height);
         }
 
         public void Clear(T Value)
@@ -95,6 +98,59 @@ namespace Dungeon_Generator
         public Point GetRandomTile(IRng RandomSource, int EdgeAvoid = 0)
         {
             return new Point(RandomSource.Next(EdgeAvoid, Size.Width - EdgeAvoid), RandomSource.Next(EdgeAvoid, Size.Height - EdgeAvoid));
+        }
+
+        public bool Adjacent4(Point Position, T Value)
+        {
+            return Adjacent4(Position.X, Position.Y, Value);
+        }
+
+        public bool Adjacent4(int X, int Y, T Value)
+        {
+            if (Equals(GetTile(X - 1, Y), Value))
+                return true;
+
+            if (Equals(GetTile(X + 1, Y), Value))
+                return true;
+
+            if (Equals(GetTile(X, Y - 1), Value))
+                return true;
+
+            if (Equals(GetTile(X, Y + 1), Value))
+                return true;
+
+            return false;
+        }
+
+        public bool Adjacent8(Point Position, T Value)
+        {
+            return Adjacent8(Position.X, Position.Y, Value);
+        }
+
+        public bool Adjacent8(int X, int Y, T Value)
+        {
+            for (int dX = -1; dX < 2; dX++)
+                for (int dY = -1; dY < 2; dY++)
+                    if ((dX | dY) != 0 && Equals(GetTile(X + dX, Y + dY), Value))
+                        return true;
+
+            return false;
+        }
+
+        public int NumWithin(Point P, int Radius, params T[] Values)
+        {
+            return NumWithin(P.X, P.Y, Radius, Values);
+        }
+
+        public int NumWithin(int X, int Y, int Radius, params T[] Values)
+        {
+            int Count = 0;
+            for (int dX = - Radius; dX <= Radius; dX++)
+                for (int dY = - Radius; dY <= Radius; dY++)
+                    if (Values.Contains(GetTile(X + dX, Y + dY)))
+                        Count++;
+
+            return Count;
         }
 
         public bool EdgePierced(T SolidValue)
