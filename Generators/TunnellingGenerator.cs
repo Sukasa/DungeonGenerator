@@ -2,7 +2,7 @@
 using System;
 using System.Drawing;
 
-namespace Dungeon_Generator.Generators
+namespace DungeonGenerator.Generators
 {
     public class CityRoadsGenerator<T> : DungeonGenerator<T>
     {
@@ -11,6 +11,7 @@ namespace Dungeon_Generator.Generators
         }
 
         public int Roads { get; private set; } = 0;
+        public int Rooms { get; private set; } = 0;
 
         public override void Generate(ulong Seed)
         {
@@ -24,6 +25,7 @@ namespace Dungeon_Generator.Generators
             Point Direction = new Point(1, 0).Turn(90 * RandomSource.Next(0, 4));
 
             Roads = 0;
+            Rooms = 0;
             Road(Start, RandomSource.Next(4, 6), RandomSource.Next(Dungeon.Size.Height >> 1, Dungeon.Size.Width - (Dungeon.Size.Width >> 2)), Direction);
         }
 
@@ -41,11 +43,12 @@ namespace Dungeon_Generator.Generators
             int LDepth = 0;
             int CheckSkip = 4;
             int TooClosePenalty = 12;
+            bool end = false;
 
             for (; Length > 0; Length--, LDepth++, CheckSkip--)
             {
                 if (CheckSkip <= 0 && !Equals(Dungeon.GetTile(Position), DefaultBlockedTile))
-                    return;
+                    end = true;
 
                 // Mark road tiles
                 if (Vertical)
@@ -112,17 +115,21 @@ namespace Dungeon_Generator.Generators
                             DecoStart.Offset(NewDirection);
 
                         Decorators.RoomPlacer<T> Placer = new Decorators.RoomPlacer<T>();
+                        Rooms++;
                         Placer.RandomSource = RandomSource;
                         Placer.FillValue = DefaultFeatureTile;
                         Placer.ReplaceValue = DefaultBlockedTile;
                         Placer.Create(Dungeon, DecoStart, NewDirection);
-                        TooClosePenalty = Math.Max(TooClosePenalty, Placer.Keepout);
+                        //TooClosePenalty = Math.Max(TooClosePenalty, Placer.Keepout);
                         Length = Math.Max(Length, (Placer.Keepout >> 1) + 2);
                     }
                 }
 
                 // And progress in the road direction
                 Position.Offset(Direction);
+
+                if (end)
+                    return;
             }
         }
     }
