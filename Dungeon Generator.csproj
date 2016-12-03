@@ -43,10 +43,13 @@
   <ItemGroup>
     <Compile Include="Decorators\IDecorator.cs" />
     <Compile Include="Decorators\RoomDecorator.cs" />
+    <Compile Include="DungeonWorker.cs" />
     <Compile Include="Generators\DungeonGenerator.cs" />
     <Compile Include="DungeonFloor.cs" />
     <Compile Include="Generators\TunnellingGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Transformers\DungeonTransformer.cs" />
+    <Compile Include="Transformers\LambdaTransformer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\ExtensionFunctions\ExtensionFunctions.csproj">
@@ -58,6 +61,7 @@
       <Name>RNGLib</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
